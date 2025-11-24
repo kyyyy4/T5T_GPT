@@ -577,15 +577,70 @@
     });
 
     // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
-    const bigTextWrapper = document.getElementById('bigTextWrapper');
-
-    const bigLines = [
-      "aka. col",
-      "lab w an",
-      "LLM"
-    ];
-
     const flickerChars = 'abcdefghijklmnopqrstuvwxyz0123456789.,:;?!-+<>[](){}\\/|_'.split('');
+const bigTextWrapper = document.getElementById('bigTextWrapper');
+
+function getBigLines() {
+  if (window.innerWidth <= 900) {
+    // mobile stack
+    return ["aka.", "col", "lab", "w", "an", "LLM"];
+  } else {
+    // desktop layout
+    return ["aka. col", "lab w an", "LLM"];
+  }
+}
+
+function buildBigText() {
+  bigTextWrapper.innerHTML = "";
+  const lines = getBigLines();
+
+  lines.forEach(lineStr => {
+    const lineDiv = document.createElement('div');
+    lineDiv.className = 'home-line';
+
+    for (let i = 0; i < lineStr.length; i++) {
+      const ch = lineStr[i];
+      const span = document.createElement('span');
+
+      if (ch === ' ') {
+        span.className = 'space';
+        span.textContent = '';
+      } else {
+        span.className = 'char';
+        span.textContent = ch;
+        span.dataset.original = ch;
+        span.addEventListener('mouseenter', () => startFlicker(span));
+      }
+      lineDiv.appendChild(span);
+    }
+
+    bigTextWrapper.appendChild(lineDiv);
+  });
+}
+
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function startFlicker(span) {
+  const original = span.dataset.original || span.textContent;
+  let count = 0;
+  const maxFlips = 6;
+  const interval = setInterval(() => {
+    count++;
+    if (count >= maxFlips) {
+      clearInterval(interval);
+      span.textContent = original;
+      return;
+    }
+    span.textContent = randomFrom(flickerChars);
+  }, 60 + Math.random() * 80);
+}
+
+buildBigText();
+window.addEventListener('resize', () => {
+  buildBigText();
+});
 
     function buildBigText() {
       bigLines.forEach(lineStr => {
