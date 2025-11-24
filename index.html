@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Hallucination Archives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Swap these with your actual font-face declarations -->
+  <style>
+    @font-face {
+      font-family: "AkkuratMono";
+      src: local("Akkurat Mono"), local("Akkurat-Mono");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "AvenirHeavy";
+      src: local("Avenir Heavy"), local("Avenir-Heavy");
+      font-weight: 800;
+      font-style: normal;
+    }
+
+    :root {
+      --bg-dark: #101010;
+      --accent-red: #ff2121;
+      --text-white: #f5f5f5;
+      --grid-size: 8px;
+      --cursor-size: 18px;
+      --hallucination-square: 220px;
+      --cursor-color: rgba(26,26,26,0.92); /* ~10% gray, 92% alpha */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 100% 0,
+                  #8d1f2a 0%, #131313 45%, #050505 100%);
+      color: var(--text-white);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      cursor: none; /* hide default cursor */
+      overflow: hidden;
+    }
+
+    /* Make sure links/buttons never show default cursor */
+    a, button {
+      cursor: none !important;
+    }
+
+    .page-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ---------------- NAV / HEADER ---------------- */
+
+    header.site-header {
+      position: absolute;
+      top: 18px;
+      left: 24px;
+      right: 24px;
+      z-index: 20;
+      display: flex;
+      justify-content: flex-start;
+      gap: 32px;
+      font-family: "AkkuratMono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-main a {
+      text-decoration: none;
+      color: var(--text-white);
+      opacity: 0.75;
+      transition: opacity 150ms, color 150ms;
+    }
+
+    .nav-main a.active,
+    .nav-main a:hover {
+      opacity: 1;
+      color: var(--accent-red);
+    }
+
+    /* Left rail nav (About/Media pages) */
+
+    .nav-secondary {
+      position: absolute;
+      left: 24px;
+      top: 90px;
+      font-family: "AkkuratMono", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .nav-secondary a {
+      display: block;
+      color: var(--text-white);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+
+    .nav-secondary a:hover {
+      color: var(--accent-red);
+      opacity: 1;
+    }
+
+    main {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    section {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    /* ---------------- GRID BACKGROUND ---------------- */
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: var(--grid-size) var(--grid-size);
+      opacity: 0.28;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ---------------- HOME / LANDING ---------------- */
+
+    .home-bigtext-wrapper {
+      position: absolute;
+      inset: 0;
+      padding: 120px 40px 80px 40px;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 0.25em;
+    }
+
+    .home-line {
+      display: flex;
+      width: 100%;
+      font-family: "AkkuratMono", monospace;
+      font-size: min(25vw, 230px);
+      line-height: 0.85;
+      font-weight: 400;
+      color: var(--accent-red);
+      white-space: nowrap;
+    }
+
+    .home-line span.char {
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .home-line span.space {
+      flex: 1 1 auto;
+    }
+
+    .home-title-lockup {
+      position: absolute;
+      left: 40px;
+      bottom: 120px;
+      z-index: 5;
+    }
+
+    .home-title-lockup img {
+      display: block;
+      height: 80px;
+      width: auto;
+    }
+
+    /* Blurred hallucination behind lockup, revealed with square mask */
+
+    .hallucination-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      clip-path: inset(50% 50% 50% 50% round 2px); /* updated by JS */
+    }
+
+    .hallucination-image {
+      position: absolute;
+      left: 40px;
+      bottom: 120px;
+      height: 80px;
+      width: auto;
+      filter: blur(7px);
+      opacity: 0.9;
+    }
+
+    /* ---------------- ABOUT ---------------- */
+
+    .center-scroll-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 720px;
+      max-height: 60vh;
+      padding: 32px 36px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: radial-gradient(circle at 0 0,
+                 rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.90) 45%, rgba(0,0,0,0.98) 100%);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      z-index: 2;
+      font-family: "AkkuratMono", monospace;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .center-scroll-container p + p {
+      margin-top: 1.6em;
+    }
+
+    /* ---------------- MEDIA GRID (INSIDE CENTER CONTAINER) ---------------- */
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      font-family: "AkkuratMono", monospace;
+      font-size: 13px;
+    }
+
+    .media-block {
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(0,0,0,0.45);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .media-block h3 {
+      font-weight: 400;
+      text-transform: lowercase;
+    }
+
+    .media-thumb {
+      flex: 1;
+      background: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .media-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ---------------- BOTTOM LOCKUP ---------------- */
+
+    .bottom-lockup {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 10;
+    }
+
+    .bottom-wordmark {
+      font-family: "AkkuratMono", monospace;
+      font-size: 20px;
+      text-transform: uppercase;
+      display: flex;
+      gap: 0.3em;
+      white-space: nowrap;
+    }
+
+    .bottom-logo {
+      height: 28px;
+      width: auto;
+    }
+
+    /* ---------------- CUSTOM CURSOR ---------------- */
+
+    .cursor-vert,
+    .cursor-horiz {
+      position: fixed;
+      pointer-events: none;
+      background: var(--cursor-color);
+      z-index: 100;
+    }
+
+    .cursor-vert {
+      width: 1px;
+      height: 100vh;
+      left: 0;
+      top: 0;
+    }
+
+    .cursor-horiz {
+      height: 1px;
+      width: 100vw;
+      left: 0;
+      top: 0;
+    }
+
+    .cursor-square {
+      position: fixed;
+      width: var(--cursor-size);
+      height: var(--cursor-size);
+      margin-left: calc(var(--cursor-size) * -0.5);
+      margin-top: calc(var(--cursor-size) * -0.5);
+      border: 1px solid var(--cursor-color);
+      background: var(--cursor-color);
+      pointer-events: none;
+      z-index: 101;
+    }
+
+    /* ---------------- RESPONSIVE ---------------- */
+
+    @media (max-width: 900px) {
+      .home-bigtext-wrapper {
+        padding-top: 90px;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .home-line {
+        font-size: 26vw;
+      }
+      .home-title-lockup {
+        left: 24px;
+        bottom: 110px;
+      }
+      .home-title-lockup img,
+      .hallucination-image {
+        height: 64px;
+      }
+      .nav-secondary {
+        display: none;
+      }
+      .center-scroll-container {
+        max-width: calc(100vw - 48px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .bottom-lockup {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        right: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+
+    <!-- TOP NAV -->
+    <header class="site-header">
+      <nav class="nav-main">
+        <a href="#home" data-section="home" class="active">HOME</a>
+        <a href="#about" data-section="about">ABOUT</a>
+        <a href="#media" data-section="media">MEDIA</a>
+        <a href="#contact" data-section="contact">CONTACT</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HOME -->
+      <section id="home" class="active">
+        <div class="bg-grid"></div>
+
+        <!-- Big red Akkurat text -->
+        <div class="home-bigtext-wrapper" id="bigTextWrapper"></div>
+
+        <!-- Lockup SVG -->
+        <div class="home-title-lockup">
+          <img src="/mnt/data/MICRO_tHA_Lockup-1_v2.svg" alt="The Hallucination Archives" />
+        </div>
+
+        <!-- Blurred version behind, revealed by square mask -->
+        <div class="hallucination-overlay" id="hallOverlay">
+          <img src="/mnt/data/type hallu v3.svg" class="hallucination-image"
+               alt="Hallucination blur" />
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about">
+        <div class="bg-grid"></div>
+
+        <nav class="nav-secondary">
+          <a href="#project">project</a>
+          <a href="#chatlogs">chat logs</a>
+          <a href="#images">project images</a>
+          <a href="#moreai">more ai</a>
+          <a href="#education">education</a>
+        </nav>
+
+        <div class="center-scroll-container">
+          <p><strong>The Hallucination Archives</strong> is a micro-project exploring the visual logic and failure
+            modes of contemporary generative AI. Borrowing conceptual structure from Jonathan Basile&rsquo;s
+            <em>Library of Babel</em>, the project positions AI models as modern librarians: systems that generate
+            infinite possibilities but do not understand the content they produce.</p>
+          <p>The work focuses on hallucinations &mdash; not as glitches, but as structural features of probabilistic
+            models. Using prompt-driven image generation, OCR-style annotation, grid-based typographic systems, and
+            intentionally &ldquo;misread&rdquo; display type, the project visualizes how AI errors occur and how they
+            shape the aesthetic language of machine-generated media.</p>
+          <p>Developed as a collaboration between a human designer and a large language model, the project treats
+            misinterpretation as a design material. The tools that generate the imagery also assist in naming,
+            structuring, and critiquing it, turning the site itself into a kind of live chat log between human and AI
+            about what it means to build a library out of predictions.</p>
+        </div>
+      </section>
+
+      <!-- MEDIA -->
+      <section id="media">
+        <div class="bg-grid"></div>
+
+        <nav class="nav-secondary">
+          <a href="#project">project</a>
+          <a href="#chatlogs">chat logs</a>
+          <a href="#images">project images</a>
+          <a href="#moreai">more ai</a>
+          <a href="#education">education</a>
+        </nav>
+
+        <div class="center-scroll-container">
+          <div class="media-grid">
+            <div class="media-block">
+              <h3>booklet</h3>
+              <div class="media-thumb">
+                booklet preview
+              </div>
+            </div>
+            <div class="media-block">
+              <h3>posters</h3>
+              <div class="media-thumb">
+                posters grid
+              </div>
+            </div>
+            <div class="media-block">
+              <h3>spatial</h3>
+              <div class="media-thumb">
+                spatial mockups
+              </div>
+            </div>
+            <div class="media-block">
+              <h3>social</h3>
+              <div class="media-thumb">
+                social stack
+              </div>
+            </div>
+            <div class="media-block">
+              <h3>ephemera</h3>
+              <div class="media-thumb">
+                ephemera
+              </div>
+            </div>
+            <div class="media-block">
+              <h3>else</h3>
+              <div class="media-thumb">
+                misc
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT (placeholder center container) -->
+      <section id="contact">
+        <div class="bg-grid"></div>
+
+        <div class="center-scroll-container">
+          <p>Contact details for the project can live here &mdash; curator, email, or a short note about how to
+            reach the studio / read more about the work.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- BOTTOM LOCKUP -->
+    <div class="bottom-lockup">
+      <div class="bottom-wordmark">
+        <span>THE</span><span>HALLUCINATION</span><span>ARCHIVES</span>
+      </div>
+      <img class="bottom-logo" src="/mnt/data/MACRO-logo1B_Wt.svg" alt="Babel logo" />
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-vert" id="cursorVert"></div>
+    <div class="cursor-horiz" id="cursorHoriz"></div>
+    <div class="cursor-square" id="cursorSquare"></div>
+
+  </div>
+
+  <script>
+    // ---------------- SECTION SWITCHING ----------------
+    const navLinks = document.querySelectorAll('.nav-main a[data-section]');
+    const sections = document.querySelectorAll('main section');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = link.dataset.section;
+
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        sections.forEach(sec => {
+          sec.classList.toggle('active', sec.id === target);
+        });
+      });
+    });
+
+    // default: home visible
+    sections.forEach(sec => sec.classList.toggle('active', sec.id === 'home'));
+
+    // ---------------- CUSTOM CURSOR ----------------
+    const cursorVert = document.getElementById('cursorVert');
+    const cursorHoriz = document.getElementById('cursorHoriz');
+    const cursorSquare = document.getElementById('cursorSquare');
+
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+
+      cursorVert.style.transform = `translateX(${x}px)`;
+      cursorHoriz.style.transform = `translateY(${y}px)`;
+      cursorSquare.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    // ---------------- HALLUCINATION MASK ----------------
+    const hallOverlay = document.getElementById('hallOverlay');
+    const squareSize = parseInt(getComputedStyle(document.documentElement)
+      .getPropertyValue('--hallucination-square')) || 220;
+
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const half = squareSize / 2;
+      const top = Math.max(0, y - half);
+      const left = Math.max(0, x - half);
+      const bottom = Math.max(0, h - (y + half));
+      const right = Math.max(0, w - (x + half));
+
+      hallOverlay.style.clipPath =
+        `inset(${top}px ${right}px ${bottom}px ${left}px round 4px)`;
+    });
+
+    // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
+    const bigTextWrapper = document.getElementById('bigTextWrapper');
+
+    const bigLines = [
+      "aka. col",
+      "lab w an",
+      "LLM"
+    ];
+
+    const flickerChars = 'abcdefghijklmnopqrstuvwxyz0123456789.,:;?!-+<>[](){}\\/|_'.split('');
+
+    function buildBigText() {
+      bigLines.forEach(lineStr => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'home-line';
+
+        for (let i = 0; i < lineStr.length; i++) {
+          const ch = lineStr[i];
+          const span = document.createElement('span');
+
+          if (ch === ' ') {
+            span.className = 'space';
+            span.textContent = '';
+          } else {
+            span.className = 'char';
+            span.textContent = ch;
+            span.dataset.original = ch;
+
+            span.addEventListener('mouseenter', () => {
+              startFlicker(span);
+            });
+          }
+
+          lineDiv.appendChild(span);
+        }
+
+        bigTextWrapper.appendChild(lineDiv);
+      });
+    }
+
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function startFlicker(span) {
+      const original = span.dataset.original || span.textContent;
+      let count = 0;
+      const maxFlips = 6;
+      const interval = setInterval(() => {
+        count++;
+        if (count >= maxFlips) {
+          clearInterval(interval);
+          span.textContent = original;
+          return;
+        }
+        span.textContent = randomFrom(flickerChars);
+      }, 60 + Math.random() * 80);
+    }
+
+    buildBigText();
+  </script>
+</body>
+</html>
