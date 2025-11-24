@@ -20,15 +20,14 @@
       font-style: normal;
     }
 
-    :root {
-      --bg-dark: #101010;
-      --accent-red: #ff2121;
-      --text-white: #f5f5f5;
-      --grid-size: 8px;
-      --cursor-size: 18px;
-      --hallucination-square: 100px;
-      --cursor-color: rgba(26,26,26,0.92); /* ~10% gray, 92% alpha */
-    }
+   :root {
+  --bg-dark: #101010;
+  --accent-red: #ff2121;
+  --text-white: #f5f5f5;
+  --grid-size: 8px;
+  --cursor-size: 18px;
+  --hallucination-square: 100px;
+}
 
     * {
       margin: 0;
@@ -43,7 +42,7 @@
                   #8d1f2a 0%, #131313 45%, #050505 100%);
       color: var(--text-white);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      cursor: none; /* hide default cursor */
+      cursor: none;
       overflow: hidden;
     }
 
@@ -62,23 +61,23 @@
 
     header.site-header {
       position: absolute;
-      top: 18px;
-      left: 24px;
-      right: 24px;
+      top: 50px;          /* was ~18px */
+      left: 50px;         /* was 24px */
+      right: 50px;
       z-index: 20;
       display: flex;
       justify-content: flex-start;
-      gap: 32px;
-      font-family: "AkkuratMono", monospace;
-      font-size: 12px;
-      letter-spacing: 0.12em;
+      gap: 40px;
+      font-family: "AvenirHeavy", system-ui, sans-serif;
+      font-size: 20px;    /* ≈ 15pt */
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     .nav-main a {
       text-decoration: none;
       color: var(--text-white);
-      opacity: 0.75;
+      opacity: 0.6;
       transition: opacity 150ms, color 150ms;
     }
 
@@ -92,8 +91,8 @@
 
     .nav-secondary {
       position: absolute;
-      left: 24px;
-      top: 90px;
+      left: 50px;
+      top: 120px;
       font-family: "AkkuratMono", monospace;
       font-size: 13px;
       line-height: 1.6;
@@ -133,10 +132,10 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(to right, rgba(255,255,255,0.055) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
       background-size: var(--grid-size) var(--grid-size);
-      opacity: 0.28;
+      opacity: 0.35;
       mix-blend-mode: soft-light;
       pointer-events: none;
       z-index: 0;
@@ -147,7 +146,7 @@
     .home-bigtext-wrapper {
       position: absolute;
       inset: 0;
-      padding: 120px 40px 80px 40px;
+      padding: 150px 50px 100px 50px; /* 50px margins */
       z-index: 1;
       display: flex;
       flex-direction: column;
@@ -159,49 +158,53 @@
       display: flex;
       width: 100%;
       font-family: "AkkuratMono", monospace;
-      font-size: min(25vw, 230px);
+      font-size: clamp(160px, 18vw, 260px); /* default */
       line-height: 0.85;
       font-weight: 400;
       color: var(--accent-red);
       white-space: nowrap;
     }
 
+
     .home-line span.char {
       display: inline-block;
       flex: 0 0 auto;
     }
-
     .home-line span.space {
       flex: 1 1 auto;
     }
 
-    .home-title-lockup {
-      position: absolute;
-      left: 40px;
-      bottom: 120px;
-      z-index: 5;
+    /* at ≥1440px, push it up so gaps close on widescreens */
+    @media (min-width: 1440px) {
+      .home-line {
+        font-size: clamp(220px, 21vw, 360px);
+      }
     }
 
+  
+    .home-title-lockup {
+      position: absolute;
+      left: 50px;
+      bottom: 140px;
+      z-index: 5;
+    }
     .home-title-lockup img {
       display: block;
       height: 80px;
       width: auto;
     }
-
-    /* Blurred hallucination behind lockup, revealed with square mask */
-
+    
     .hallucination-overlay {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 2;
-      clip-path: inset(50% 50% 50% 50% round 2px); /* updated by JS */
+      clip-path: inset(50% 50% 50% 50% round 2px);
     }
-
     .hallucination-image {
       position: absolute;
-      left: 40px;
-      bottom: 120px;
+      left: 50px;
+      bottom: 140px;
       height: 80px;
       width: auto;
       filter: blur(7px);
@@ -280,8 +283,8 @@
     .bottom-lockup {
       position: absolute;
       bottom: 24px;
-      left: 24px;
-      right: 60px;
+      left: 50px;
+      right: 80px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -304,74 +307,74 @@
 
     /* ---------------- CUSTOM CURSOR ---------------- */
 
-    .cursor-vert,
+   .cursor-vert,
     .cursor-horiz {
       position: fixed;
       pointer-events: none;
-      background: var(--cursor-color);
+      background: rgba(245,245,245,0.35);
       z-index: 100;
     }
-
+    
     .cursor-vert {
       width: 1px;
       height: 100vh;
       left: 0;
       top: 0;
     }
-
+    
     .cursor-horiz {
       height: 1px;
       width: 100vw;
       left: 0;
       top: 0;
     }
-
+    
     .cursor-square {
       position: fixed;
       width: var(--cursor-size);
       height: var(--cursor-size);
       margin-left: calc(var(--cursor-size) * -0.5);
       margin-top: calc(var(--cursor-size) * -0.5);
-      border: 1px solid var(--cursor-color);
-      background: var(--cursor-color);
+      border: 1px solid rgba(245,245,245,0.55);
+      background: rgba(245,245,245,0.14);
       pointer-events: none;
       z-index: 101;
     }
 
     /* ---------------- RESPONSIVE ---------------- */
 
-    @media (max-width: 900px) {
-      .home-bigtext-wrapper {
-        padding-top: 90px;
-        padding-left: 24px;
-        padding-right: 24px;
+
+      @media (max-width: 900px) {
+        .home-bigtext-wrapper {
+          padding-top: 110px;
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+        .home-line {
+          font-size: clamp(90px, 22vw, 150px);
+        }
+        .home-title-lockup {
+          left: 24px;
+          bottom: 110px;
+        }
+        .home-title-lockup img,
+        .hallucination-image {
+          height: 64px;
+        }
+        .nav-secondary {
+          display: none;
+        }
+        .center-scroll-container {
+          max-width: calc(100vw - 48px);
+        }
+        .bottom-lockup {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+          right: 24px;
+          left: 24px;
+        }
       }
-      .home-line {
-        font-size: 26vw;
-      }
-      .home-title-lockup {
-        left: 24px;
-        bottom: 110px;
-      }
-      .home-title-lockup img,
-      .hallucination-image {
-        height: 64px;
-      }
-      .nav-secondary {
-        display: none;
-      }
-      .center-scroll-container {
-        max-width: calc(100vw - 48px);
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .bottom-lockup {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        right: 24px;
-      }
-    }
   </style>
 </head>
 <body>
