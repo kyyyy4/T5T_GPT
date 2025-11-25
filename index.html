@@ -132,14 +132,15 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255,255,255,0.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.22) 1px, transparent 1px);
       background-size: var(--grid-size) var(--grid-size);
-      opacity: 0.35;
+      opacity: 0.42;
       mix-blend-mode: soft-light;
       pointer-events: none;
       z-index: 0;
     }
+
 
     /* ---------------- HOME / LANDING ---------------- */
 
@@ -306,12 +307,12 @@
     }
 
     /* ---------------- CUSTOM CURSOR ---------------- */
-
-   .cursor-vert,
+    
+    .cursor-vert,
     .cursor-horiz {
       position: fixed;
       pointer-events: none;
-      background: rgba(245,245,245,0.35);
+      background: #ffffff;
       z-index: 100;
     }
     
@@ -335,11 +336,12 @@
       height: var(--cursor-size);
       margin-left: calc(var(--cursor-size) * -0.5);
       margin-top: calc(var(--cursor-size) * -0.5);
-      border: 1px solid rgba(245,245,245,0.55);
-      background: rgba(245,245,245,0.14);
+      border: 1px solid #ffffff;
+      background: rgba(255,255,255,0.16); /* subtle fill */
       pointer-events: none;
       z-index: 101;
     }
+
 
     /* ---------------- RESPONSIVE ---------------- */
 
