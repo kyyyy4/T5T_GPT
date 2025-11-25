@@ -306,47 +306,46 @@
       width: auto;
     }
 
-    /* ---------------- CUSTOM CURSOR ---------------- */
+    /* === CUSTOM CURSOR CROSSHAIR === */
     
     .cursor-vert,
-    .cursor-horiz {
+    .cursor-horiz,
+    .cursor-square {
       position: fixed;
+      top: 0;
+      left: 0;
       pointer-events: none;
-      background: #ffffff;      /* pure white */
-      z-index: 100;
-      opacity: 0.9;             /* make sure they’re visible */
-      mix-blend-mode: normal;   /* no blending tricks */
+      z-index: 9999;          /* on top of literally everything */
     }
     
+    /* vertical line */
     .cursor-vert {
       width: 1px;
       height: 100vh;
-      left: 0;
-      top: 0;
+      background: #ffffff;
+      opacity: 1;
+      mix-blend-mode: normal;
     }
     
+    /* horizontal line */
     .cursor-horiz {
       height: 1px;
       width: 100vw;
-      left: 0;
-      top: 0;
-    }
-    
-    .cursor-square {
-      position: fixed;
-      width: var(--cursor-size);
-      height: var(--cursor-size);
-      margin-left: calc(var(--cursor-size) * -0.5);
-      margin-top: calc(var(--cursor-size) * -0.5);
-      border: 1px solid #ffffff;
-      background: rgba(255,255,255,0.16);
-      pointer-events: none;
-      z-index: 101;
-      opacity: 0.9;
+      background: #ffffff;
+      opacity: 1;
       mix-blend-mode: normal;
     }
-
-
+    
+    /* square at intersection */
+    .cursor-square {
+      width: var(--cursor-size, 18px);
+      height: var(--cursor-size, 18px);
+      border: 1px solid #ffffff;
+      background: rgba(255, 255, 255, 0.16);
+      opacity: 1;
+      mix-blend-mode: normal;
+    }
+    
 
     /* ---------------- RESPONSIVE ---------------- */
 
@@ -547,21 +546,39 @@
     // default: home visible
     sections.forEach(sec => sec.classList.toggle('active', sec.id === 'home'));
 
+    
     // ---------------- CUSTOM CURSOR ----------------
+  
     const cursorVert = document.getElementById('cursorVert');
     const cursorHoriz = document.getElementById('cursorHoriz');
     const cursorSquare = document.getElementById('cursorSquare');
-
+    
     document.addEventListener('mousemove', (e) => {
       const x = e.clientX;
       const y = e.clientY;
-
+    
+      // move lines
       cursorVert.style.transform = `translateX(${x}px)`;
       cursorHoriz.style.transform = `translateY(${y}px)`;
-      cursorSquare.style.transform = `translate(${x}px, ${y}px)`;
+    
+      // move square and center it on the point
+      cursorSquare.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    
+      cursorVert.style.opacity = '1';
+      cursorHoriz.style.opacity = '1';
+      cursorSquare.style.opacity = '1';
     });
-
+    
+    // optional: hide the crosshair when the mouse leaves the viewport
+ /*   document.addEventListener('mouseleave', () => {
+      cursorVert.style.opacity = '0';
+      cursorHoriz.style.opacity = '0';
+      cursorSquare.style.opacity = '0';
+    });
+*/
+    
     // ---------------- HALLUCINATION MASK ----------------
+    
     const hallOverlay = document.getElementById('hallOverlay');
     const squareSize = parseInt(getComputedStyle(document.documentElement)
       .getPropertyValue('--hallucination-square')) || 220;
