@@ -191,7 +191,7 @@
     }
     .home-title-lockup img {
       display: block;
-      height: 80px;
+      height: 280px; /*+200px*/
       width: auto;
     }
     
@@ -312,8 +312,10 @@
     .cursor-horiz {
       position: fixed;
       pointer-events: none;
-      background: #ffffff;
+      background: #ffffff;      /* pure white */
       z-index: 100;
+      opacity: 0.9;             /* make sure they’re visible */
+      mix-blend-mode: normal;   /* no blending tricks */
     }
     
     .cursor-vert {
@@ -337,10 +339,13 @@
       margin-left: calc(var(--cursor-size) * -0.5);
       margin-top: calc(var(--cursor-size) * -0.5);
       border: 1px solid #ffffff;
-      background: rgba(255,255,255,0.16); /* subtle fill */
+      background: rgba(255,255,255,0.16);
       pointer-events: none;
       z-index: 101;
+      opacity: 0.9;
+      mix-blend-mode: normal;
     }
+
 
 
     /* ---------------- RESPONSIVE ---------------- */
