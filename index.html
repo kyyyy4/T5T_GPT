@@ -25,7 +25,7 @@
   --accent-red: #ff2121;
   --text-white: #f5f5f5;
   --grid-size: 8px;
-  --cursor-size: 18px;
+  --cursor-size: 24px;
   --hallucination-square: 100px;
 }
 
@@ -322,7 +322,7 @@
     .cursor-vert {
       width: 1px;
       height: 100vh;
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.9);  /*replaced '#ffffff' with rgba*/
       opacity: 1;
       mix-blend-mode: normal;
     }
@@ -331,7 +331,7 @@
     .cursor-horiz {
       height: 1px;
       width: 100vw;
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.9);     /*replaced '#ffffff' with rgba*/
       opacity: 1;
       mix-blend-mode: normal;
     }
@@ -340,8 +340,8 @@
     .cursor-square {
       width: var(--cursor-size, 24px);
       height: var(--cursor-size, 24px);
-      border: 1px solid #ffffff;
-      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.9);  /*replaced '#ffffff' with rgba*/
+      background: rgba(255, 255, 255, 0.2);
       opacity: 1;
       mix-blend-mode: normal;
     }
