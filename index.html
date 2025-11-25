@@ -123,20 +123,22 @@
     .nav-toggle-box {
       width: 36px;
       height: 36px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid #ffffff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 5px;
       transition: transform 220ms ease-out;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
     }
     
     .nav-toggle-box span {
       width: 60%;
-      height: 1px;
-      background: var(--text-white);
+      height: 1.5px;
+      background: #ffffff;
     }
+
     
     /* Mobile overlay menu */
     
@@ -163,7 +165,7 @@
     .mobile-menu-nav {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 60px;
       text-align: center;
       font-family: "AvenirHeavy", system-ui, sans-serif;
       font-size: 20px;
@@ -245,7 +247,7 @@
     .home-bigtext-wrapper {
       position: absolute;
       inset: 0;
-      padding: 0; /* edge-to-edge, text touches viewport edges */
+      padding: 40px -10px 0 -10px; /* edge-to-edge, text touches viewport edges */
       z-index: 1;
       display: flex;
       flex-direction: column;
@@ -304,7 +306,7 @@
       position: absolute;
       left: 50px;
       bottom: 140px;
-      height: 80px;
+      height: 280px;
       width: auto;
       filter: blur(7px);
       opacity: 0.9;
@@ -416,33 +418,34 @@
       z-index: 9999;          /* on top of literally everything */
     }
     
-    /* vertical line */
     .cursor-vert {
       width: 1px;
       height: 100vh;
-      background: rgba(255, 255, 255, 0.9);  /*replaced '#ffffff' with rgba*/
+      background: #ffffff;
       opacity: 1;
       mix-blend-mode: normal;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
     }
     
-    /* horizontal line */
     .cursor-horiz {
       height: 1px;
       width: 100vw;
-      background: rgba(255, 255, 255, 0.9);     /*replaced '#ffffff' with rgba*/
+      background: #ffffff;
       opacity: 1;
       mix-blend-mode: normal;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
     }
     
-    /* square at intersection */
     .cursor-square {
       width: var(--cursor-size, 24px);
       height: var(--cursor-size, 24px);
-      border: 1px solid rgba(255, 255, 255, 0.9);  /*replaced '#ffffff' with rgba*/
-      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid #ffffff;
+      background: rgba(255, 255, 255, 0.15);
       opacity: 1;
       mix-blend-mode: normal;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
     }
+
     
 
     /* ---------------- RESPONSIVE ---------------- */
@@ -681,11 +684,18 @@
     const navToggleBox = document.getElementById('navToggleBox');
     const mobileMenu = document.getElementById('mobileMenu');
     let navRotation = 0;
-
+    
     function closeMobileMenu() {
       if (!mobileMenu) return;
       if (mobileMenu.classList.contains('open')) {
+        // also rotate 90° CCW when closing via link
+        navRotation -= 90;
+        if (navToggleBox) {
+          navToggleBox.style.transform = `rotate(${navRotation}deg)`;
+        }
+    
         mobileMenu.classList.remove('open');
+    
         // normalize rotation after the closing animation finishes
         setTimeout(() => {
           navRotation = navRotation % 360;
@@ -716,56 +726,59 @@
     sections.forEach(sec => sec.classList.toggle('active', sec.id === 'home'));
 
     
-    // ---------------- CUSTOM CURSOR ----------------
-  
+    // ---------------- CUSTOM CURSOR + HALLUCINATION MASK ----------------
+    
     const cursorVert = document.getElementById('cursorVert');
     const cursorHoriz = document.getElementById('cursorHoriz');
     const cursorSquare = document.getElementById('cursorSquare');
     
-    document.addEventListener('mousemove', (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-    
-      // move lines
-      cursorVert.style.transform = `translateX(${x}px)`;
-      cursorHoriz.style.transform = `translateY(${y}px)`;
-    
-      // move square and center it on the point
-      cursorSquare.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-    
-      cursorVert.style.opacity = '1';
-      cursorHoriz.style.opacity = '1';
-      cursorSquare.style.opacity = '1';
-    });
-    
-    // optional: hide the crosshair when the mouse leaves the viewport
- /*   document.addEventListener('mouseleave', () => {
-      cursorVert.style.opacity = '0';
-      cursorHoriz.style.opacity = '0';
-      cursorSquare.style.opacity = '0';
-    });
-*/
-    
-    // ---------------- HALLUCINATION MASK ----------------
-    
     const hallOverlay = document.getElementById('hallOverlay');
-    const squareSize = parseInt(getComputedStyle(document.documentElement)
-      .getPropertyValue('--hallucination-square')) || 220;
-
-    document.addEventListener('mousemove', (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
+    const squareSize = parseInt(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--hallucination-square')
+    ) || 220;
+    
+    function updatePointer(x, y) {
       const w = window.innerWidth;
       const h = window.innerHeight;
-
-      const half = squareSize / 2;
-      const top = Math.max(0, y - half);
-      const left = Math.max(0, x - half);
-      const bottom = Math.max(0, h - (y + half));
-      const right = Math.max(0, w - (x + half));
-
-      hallOverlay.style.clipPath =
-        `inset(${top}px ${right}px ${bottom}px ${left}px round 4px)`;
+    
+      // move crosshair
+      if (cursorVert && cursorHoriz && cursorSquare) {
+        cursorVert.style.transform = `translateX(${x}px)`;
+        cursorHoriz.style.transform = `translateY(${y}px)`;
+        cursorSquare.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+        cursorVert.style.opacity = '1';
+        cursorHoriz.style.opacity = '1';
+        cursorSquare.style.opacity = '1';
+      }
+    
+      // move hallucination clip square
+      if (hallOverlay) {
+        const half = squareSize / 2;
+        const top = Math.max(0, y - half);
+        const left = Math.max(0, x - half);
+        const bottom = Math.max(0, h - (y + half));
+        const right = Math.max(0, w - (x + half));
+    
+        hallOverlay.style.clipPath =
+          `inset(${top}px ${right}px ${bottom}px ${left}px round 4px)`;
+      }
+    }
+    
+    // Mouse
+    document.addEventListener('mousemove', (e) => {
+      updatePointer(e.clientX, e.clientY);
+    });
+    
+    // Touch
+    document.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      if (t) updatePointer(t.clientX, t.clientY);
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      if (t) updatePointer(t.clientX, t.clientY);
     });
 
 // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
