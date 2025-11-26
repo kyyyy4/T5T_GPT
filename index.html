@@ -97,6 +97,11 @@
       text-transform: uppercase;
     }
 
+    .nav-main {
+      display: flex;
+      gap: 40px;  /* adjust if you want even looser/tighter */
+    }
+
     .nav-main a {
       text-decoration: none;
       color: var(--text-white);
@@ -248,25 +253,26 @@
     .home-bigtext-wrapper {
       position: absolute;
       inset: 0;
-      padding: 40px -10px 0 -10px; /* edge-to-edge, text touches viewport edges */
+      padding-top: 90px;   /* down from the top ~50px more than before */
       z-index: 1;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       gap: 0.25em;
+      overflow: visible;
     }
 
     .home-line {
       display: flex;
-      width: 100%;
+      width: 110vw;                     /* extend beyond viewport */
+      transform: translateX(-5vw);      /* 5vw off left and right */
       font-family: "AkkuratMono", monospace;
-      font-size: clamp(160px, 18vw, 260px); /* default */
+      font-size: clamp(160px, 18vw, 260px);
       line-height: 0.85;
       font-weight: 400;
       color: var(--accent-red);
       white-space: nowrap;
     }
-
 
     .home-line span.char {
       display: inline-block;
@@ -293,11 +299,14 @@
       left: 50px;
       bottom: 140px;
       z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
     
     .home-title-lockup img {
       display: block;
-      height: 200px;   /* pick the size that looks right */
+      height: 64px;   /* tweak this if you want the lockup larger/smaller */
       width: auto;
     }
        
@@ -308,17 +317,18 @@
       z-index: 2;
       clip-path: inset(50% 50% 50% 50% round 2px);
     }
-       .hallucination-image {
+    
+    /* blur exactly matches the middle "HALLU" line */
+    .hallucination-image {
       position: absolute;
       left: 50px;
       bottom: 140px;
-      height: 200px;   /* same as above so type hallu stays registered */
+      height: 64px;
       width: auto;
       filter: blur(7px);
       opacity: 0.9;
     }
-
-
+    
     /* ---------------- ABOUT ---------------- */
 
     .center-scroll-container {
@@ -428,7 +438,8 @@
 
 
     /* === CUSTOM CURSOR CROSSHAIR === */
-    
+
+    /*
     .cursor-vert,
     .cursor-horiz,
     .cursor-square {
@@ -436,8 +447,22 @@
       top: 0;
       left: 0;
       pointer-events: none;
-      z-index: 9999;          /* on top of literally everything */
+      z-index: 9999;          
+    } 
+    */
+
+    .cursor-vert,
+    .cursor-horiz,
+    .cursor-square {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: screen;
+      isolation: isolate;          /* 6b 'nuke*/
     }
+
     
     .cursor-vert {
       width: 1px;
@@ -496,7 +521,12 @@
         padding-right: 24px;
       }
       .home-line {
+        width: 100%;
+        transform: none;
         font-size: clamp(90px, 22vw, 150px);
+      }
+      .home-line.last-line {
+        justify-content: flex-start;
       }
       .home-title-lockup {
         left: 24px;
@@ -512,6 +542,11 @@
       .center-scroll-container {
         max-width: calc(100vw - 48px);
       }
+      
+      .bottom-wordmark-home {
+        display: none !important;
+      }
+
       .bottom-lockup {
         flex-direction: column;
         align-items: flex-start;
@@ -562,9 +597,11 @@
         <!-- Big red Akkurat text -->
         <div class="home-bigtext-wrapper" id="bigTextWrapper"></div>
 
-       <!-- home title lockup -->
+      <!-- home title lockup: three-line stack -->
       <div class="home-title-lockup">
-        <img src="MICRO_tHA_Lockup-1_v2.svg" alt="The Hallucination Archives" />
+        <img src="MICRO lockup_THE.svg" alt="THE" />
+        <img class="home-title-hallu" src="MICRO lockup_HALLU-KNOCKOUT.svg" alt="HALLUCINATION" />
+        <img src="MICRO lockup_ARCHIVES.svg" alt="ARCHIVES" />
       </div>
 
        <!-- blurred hallucination behind -->
