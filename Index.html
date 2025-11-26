@@ -120,24 +120,25 @@
       display: none; /* only shown at small widths */
     }
     
-    .nav-toggle-box {
-      width: 36px;
-      height: 36px;
-      border: 1px solid #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: transform 220ms ease-out;
-      box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
-    }
-    
-    .nav-toggle-box span {
-      width: 60%;
-      height: 1.5px;
-      background: #ffffff;
-    }
+      .nav-toggle-box {
+        width: 36px;
+        height: 36px;
+        border: 1px solid #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: transform 220ms ease-out;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+      }
+      
+      .nav-toggle-box span {
+        width: 60%;
+        height: 1.5px;
+        background: #ffffff;
+      }
+
 
     
     /* Mobile overlay menu */
@@ -282,19 +283,24 @@
       }
     }
 
+    .home-line.last-line {
+      justify-content: flex-end;
+    }
+
   
     .home-title-lockup {
       position: absolute;
       left: 50px;
       bottom: 140px;
-      z-index: 5;
-    }
-    .home-title-lockup img {
-      display: block;
-      height: 280px; /*+200px*/
-      width: auto;
+      z-index: 3;
     }
     
+    .home-title-lockup img {
+      display: block;
+      height: 200px;   /* pick the size that looks right */
+      width: auto;
+    }
+       
     .hallucination-overlay {
       position: fixed;
       inset: 0;
@@ -302,15 +308,16 @@
       z-index: 2;
       clip-path: inset(50% 50% 50% 50% round 2px);
     }
-    .hallucination-image {
+       .hallucination-image {
       position: absolute;
       left: 50px;
       bottom: 140px;
-      height: 280px;
+      height: 200px;   /* same as above so type hallu stays registered */
       width: auto;
       filter: blur(7px);
       opacity: 0.9;
     }
+
 
     /* ---------------- ABOUT ---------------- */
 
@@ -380,7 +387,6 @@
     }
 
     /* ---------------- BOTTOM LOCKUP ---------------- */
-
     .bottom-lockup {
       position: absolute;
       bottom: 24px;
@@ -391,20 +397,35 @@
       align-items: flex-end;
       z-index: 10;
     }
-
+    
+    .bottom-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
     .bottom-wordmark {
       font-family: "AkkuratMono", monospace;
-      font-size: 20px;
+      font-size: 16px;
       text-transform: uppercase;
-      display: flex;
-      gap: 0.3em;
       white-space: nowrap;
     }
-
+    
+    .bottom-wordmark-home {
+      color: rgb(255, 0, 0);
+    }
+    
+    .bottom-lockup-horizontal {
+      display: none;       /* hidden on home, shown on inner pages via JS */
+      height: 28px;
+      width: auto;
+    }
+    
     .bottom-logo {
       height: 28px;
       width: auto;
     }
+
 
     /* === CUSTOM CURSOR CROSSHAIR === */
     
@@ -445,6 +466,7 @@
       mix-blend-mode: normal;
       box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
     }
+
 
     
 
@@ -641,11 +663,20 @@
         </div>
       </section>
     </main>
-
+    
     <!-- BOTTOM LOCKUP -->
     <div class="bottom-lockup">
-      <div class="bottom-wordmark">
-        <span>THE</span><span>HALLUCINATION</span><span>ARCHIVES</span>
+      <div class="bottom-left">
+        <!-- home-only line -->
+        <div class="bottom-wordmark bottom-wordmark-home">
+          / / A LIBRARY OF BABEL PROJECT /
+        </div>
+        <!-- inner-page horizontal lockup -->
+        <img
+          class="bottom-lockup-horizontal"
+          src="MICRO_tHA_Lockup-2.svg"
+          alt="The Hallucination Archives horizontal lockup"
+        />
       </div>
       <!-- bottom-right macro logo -->
       <img class="bottom-logo" src="MACRO-logo1B_Wt.svg" alt="Babel logo" />
@@ -676,6 +707,22 @@
         sections.forEach(sec => {
           sec.classList.toggle('active', sec.id === target);
         });
+
+        // update bottom lockup based on section
+        const isHome = target === 'home';
+        const homeWordmark = document.querySelector('.bottom-wordmark-home');
+        const horizLockup = document.querySelector('.bottom-lockup-horizontal');
+        
+        if (homeWordmark && horizLockup) {
+          if (isHome) {
+            homeWordmark.style.display = 'block';
+            horizLockup.style.display = 'none';
+          } else {
+            homeWordmark.style.display = 'none';
+            horizLockup.style.display = 'block';
+          }
+        }
+                
       });
     });
 
@@ -725,61 +772,70 @@
     // default: home visible
     sections.forEach(sec => sec.classList.toggle('active', sec.id === 'home'));
 
-    
-    // ---------------- CUSTOM CURSOR + HALLUCINATION MASK ----------------
-    
-    const cursorVert = document.getElementById('cursorVert');
-    const cursorHoriz = document.getElementById('cursorHoriz');
-    const cursorSquare = document.getElementById('cursorSquare');
-    
-    const hallOverlay = document.getElementById('hallOverlay');
-    const squareSize = parseInt(
-      getComputedStyle(document.documentElement)
-        .getPropertyValue('--hallucination-square')
-    ) || 220;
-    
-    function updatePointer(x, y) {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-    
-      // move crosshair
-      if (cursorVert && cursorHoriz && cursorSquare) {
-        cursorVert.style.transform = `translateX(${x}px)`;
-        cursorHoriz.style.transform = `translateY(${y}px)`;
-        cursorSquare.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-        cursorVert.style.opacity = '1';
-        cursorHoriz.style.opacity = '1';
-        cursorSquare.style.opacity = '1';
-      }
-    
-      // move hallucination clip square
-      if (hallOverlay) {
-        const half = squareSize / 2;
-        const top = Math.max(0, y - half);
-        const left = Math.max(0, x - half);
-        const bottom = Math.max(0, h - (y + half));
-        const right = Math.max(0, w - (x + half));
-    
-        hallOverlay.style.clipPath =
-          `inset(${top}px ${right}px ${bottom}px ${left}px round 4px)`;
-      }
+    // bottom lockup initial state
+    const homeWordmark = document.querySelector('.bottom-wordmark-home');
+    const horizLockup = document.querySelector('.bottom-lockup-horizontal');
+    if (homeWordmark && horizLockup) {
+      homeWordmark.style.display = 'block';
+      horizLockup.style.display = 'none';
     }
+
     
-    // Mouse
-    document.addEventListener('mousemove', (e) => {
-      updatePointer(e.clientX, e.clientY);
-    });
-    
-    // Touch
-    document.addEventListener('touchstart', (e) => {
-      const t = e.touches[0];
-      if (t) updatePointer(t.clientX, t.clientY);
-    });
-    
-    document.addEventListener('touchmove', (e) => {
-      const t = e.touches[0];
-      if (t) updatePointer(t.clientX, t.clientY);
-    });
+// ---------------- CUSTOM CURSOR + HALLUCINATION MASK ----------------
+
+const cursorVert = document.getElementById('cursorVert');
+const cursorHoriz = document.getElementById('cursorHoriz');
+const cursorSquare = document.getElementById('cursorSquare');
+
+const hallOverlay = document.getElementById('hallOverlay');
+const squareSize = parseInt(
+  getComputedStyle(document.documentElement)
+    .getPropertyValue('--hallucination-square')
+) || 220;
+
+function updatePointer(x, y) {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  // move crosshair
+  if (cursorVert && cursorHoriz && cursorSquare) {
+    cursorVert.style.transform = `translateX(${x}px)`;
+    cursorHoriz.style.transform = `translateY(${y}px)`;
+    cursorSquare.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    cursorVert.style.opacity = '1';
+    cursorHoriz.style.opacity = '1';
+    cursorSquare.style.opacity = '1';
+  }
+
+  // move hallucination clip square
+  if (hallOverlay) {
+    const half = squareSize / 2;
+    const top = Math.max(0, y - half);
+    const left = Math.max(0, x - half);
+    const bottom = Math.max(0, h - (y + half));
+    const right = Math.max(0, w - (x + half));
+
+    hallOverlay.style.clipPath =
+      `inset(${top}px ${right}px ${bottom}px ${left}px round 4px)`;
+  }
+}
+
+// mouse
+document.addEventListener('mousemove', (e) => {
+  updatePointer(e.clientX, e.clientY);
+});
+
+// touch
+document.addEventListener('touchstart', (e) => {
+  const t = e.touches[0];
+  if (t) updatePointer(t.clientX, t.clientY);
+});
+
+document.addEventListener('touchmove', (e) => {
+  const t = e.touches[0];
+  if (t) updatePointer(t.clientX, t.clientY);
+});
+
 
 // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
 
@@ -801,9 +857,12 @@ function buildBigText() {
   bigTextWrapper.innerHTML = "";
   const lines = getBigLines();
 
-  lines.forEach(lineStr => {
+  lines.forEach((lineStr, idx) => {
     const lineDiv = document.createElement('div');
     lineDiv.className = 'home-line';
+    if (idx === lines.length - 1) {
+      lineDiv.classList.add('last-line');  // right-align final line ("LLM")
+    }
 
     for (let i = 0; i < lineStr.length; i++) {
       const ch = lineStr[i];
@@ -824,6 +883,7 @@ function buildBigText() {
     bigTextWrapper.appendChild(lineDiv);
   });
 }
+
 
 function randomFrom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
