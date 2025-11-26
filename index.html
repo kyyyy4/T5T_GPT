@@ -138,12 +138,13 @@
         box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
       }
       
+      /* hamburger bars */
       .nav-toggle-box span {
         width: 60%;
-        height: 1.5px;
+        height: 2px;
         background: #ffffff;
       }
-
+      
 
     
     /* Mobile overlay menu */
@@ -439,7 +440,7 @@
 
     /* === CUSTOM CURSOR CROSSHAIR === */
 
-    /*
+    
     .cursor-vert,
     .cursor-horiz,
     .cursor-square {
@@ -449,46 +450,28 @@
       pointer-events: none;
       z-index: 9999;          
     } 
-    */
-
-    .cursor-vert,
-    .cursor-horiz,
-    .cursor-square {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 9999;
-      mix-blend-mode: screen;
-      isolation: isolate;          /* 6b 'nuke*/
-    }
-
     
     .cursor-vert {
-      width: 1px;
+      width: 2px;
       height: 100vh;
       background: #ffffff;
       opacity: 1;
-      mix-blend-mode: normal;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
     }
     
     .cursor-horiz {
-      height: 1px;
+      height: 2px;
       width: 100vw;
       background: #ffffff;
       opacity: 1;
-      mix-blend-mode: normal;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
     }
     
     .cursor-square {
       width: var(--cursor-size, 24px);
       height: var(--cursor-size, 24px);
-      border: 1px solid #ffffff;
+      border: 2px solid #ffffff;
       background: rgba(255, 255, 255, 0.15);
-      opacity: 1;
-      mix-blend-mode: normal;
       box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
     }
 
@@ -834,11 +817,14 @@ function updatePointer(x, y) {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
+  const px = Math.round(x);
+  const py = Math.round(y);
+
   // move crosshair
   if (cursorVert && cursorHoriz && cursorSquare) {
-    cursorVert.style.transform = `translateX(${x}px)`;
-    cursorHoriz.style.transform = `translateY(${y}px)`;
-    cursorSquare.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    cursorVert.style.transform = `translateX(${px}px)`;
+    cursorHoriz.style.transform = `translateY(${py}px)`;
+    cursorSquare.style.transform = `translate(${px}px, ${py}px) translate(-50%, -50%)`;
     cursorVert.style.opacity = '1';
     cursorHoriz.style.opacity = '1';
     cursorSquare.style.opacity = '1';
@@ -847,10 +833,10 @@ function updatePointer(x, y) {
   // move hallucination clip square
   if (hallOverlay) {
     const half = squareSize / 2;
-    const top = Math.max(0, y - half);
-    const left = Math.max(0, x - half);
-    const bottom = Math.max(0, h - (y + half));
-    const right = Math.max(0, w - (x + half));
+    const top = Math.max(0, py - half);
+    const left = Math.max(0, px - half);
+    const bottom = Math.max(0, h - (py + half));
+    const right = Math.max(0, w - (px + half));
 
     hallOverlay.style.clipPath =
       `inset(${top}px ${right}px ${bottom}px ${left}px round 4px)`;
