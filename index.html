@@ -296,6 +296,10 @@
     }
 
   
+    :root {
+      --home-lockup-line-height: 64px;
+    }
+    
     .home-title-lockup {
       position: absolute;
       left: 50px;
@@ -303,16 +307,16 @@
       z-index: 3;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;  /* force left alignment */
-      gap: 24px;                 /* a bit more vertical gap */
+      align-items: flex-start;
+      gap: 36px; /* ! keep */
     }
-
     
     .home-title-lockup img {
       display: block;
-      height: 64px;   /* tweak this if you want the lockup larger/smaller */
+      height: var(--home-lockup-line-height);
       width: auto;
     }
+
        
     .hallucination-overlay {
       position: fixed;
@@ -322,16 +326,15 @@
       clip-path: inset(50% 50% 50% 50% round 2px);
     }
     
-    /* blur behind the middle HALLU line */
     .hallucination-image {
       position: absolute;
-      left: 50px;
-      bottom: 208px;          /* 140 + 64 + 4-ish gap → behind middle line */
-      height: 64px;
+      height: var(--home-lockup-line-height);
       width: auto;
-      filter: blur(5px);      /* slightly less blur */
+      filter: blur(5px);
       opacity: 0.9;
+      transform-origin: top left;
     }
+
     
     /* ---------------- ABOUT ---------------- */
 
@@ -436,6 +439,7 @@
     }
     
     .bottom-logo {
+      display: block;
       height: 28px;
       width: auto;
     }
@@ -862,6 +866,29 @@ document.addEventListener('touchmove', (e) => {
   const t = e.touches[0];
   if (t) updatePointer(t.clientX, t.clientY);
 });
+
+// ---------------- DRIVING THE HALLU BLUR WITH JS -------------------------------
+
+    // Position the hallucination blur so it lines up with the middle lockup line
+function positionHallucinationImage() {
+  const halluLine = document.querySelector('.home-title-hallu');
+  const hallImg = document.querySelector('.hallucination-image');
+  const overlay = document.getElementById('hallOverlay');
+
+  if (!halluLine || !hallImg || !overlay) return;
+
+  // bounding box of the middle line, relative to the viewport
+  const rect = halluLine.getBoundingClientRect();
+
+  // since hallOverlay is absolute to the viewport, we can use those coords directly
+  hallImg.style.left = `${rect.left}px`;
+  hallImg.style.top = `${rect.top}px`;
+  hallImg.style.height = `${rect.height}px`;
+}
+
+// run on load + resize so it stays correct for different sizes
+window.addEventListener('load', positionHallucinationImage);
+window.addEventListener('resize', positionHallucinationImage);
 
 
 // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
