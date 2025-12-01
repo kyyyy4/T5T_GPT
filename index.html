@@ -404,47 +404,47 @@
     }
 
     /* ---------------- BOTTOM LOCKUP ---------------- */
-    .bottom-lockup {
-      position: absolute;
-      bottom: 24px;
-      left: 50px;
-      right: 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      z-index: 4;
-    }
-    
-    .bottom-left {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    
-    .bottom-wordmark {
-      font-family: "AkkuratMono", monospace;
-      font-size: 16px;
-      white-space: nowrap;
-    }
-    
-    .bottom-wordmark-home {
-      color: rgb(255, 0, 0);
-      display: inline-block;
-      transform: translateY(2px); /* tiny baseline bump to match the B + lockup */
-    }
+  .bottom-lockup {
+    position: absolute;
+    bottom: 24px;
+    left: 50px;
+    right: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline; /* KEY: align everything by textual baseline */
+    z-index: 4;
+  }
+  
+  .bottom-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;  /* small spacing between text vs lockup */
+  }
+  
+  .bottom-wordmark {
+    font-family: "AkkuratMono", monospace;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+  
+  .bottom-wordmark-home {
+    color: rgb(255, 0, 0);
+    display: inline-block;
+    transform: translateY(1px); /* tiny optical baseline tweak */
+  }
+  
+  .bottom-lockup-horizontal {
+    display: none;    /* toggled on inner pages by JS */
+    height: 28px;
+    width: auto;
+  }
+  
+  .bottom-logo {
+    display: block;
+    height: 28px;
+    width: auto;
+  }
 
-    
-    .bottom-lockup-horizontal {
-      display: none;       /* hidden on home, shown on inner pages via JS */
-      height: 28px;
-      width: auto;
-    }
-    
-    .bottom-logo {
-      display: block;
-      height: 28px;
-      width: auto;
-    }
 
 
     /* === CUSTOM CURSOR CROSSHAIR === */
@@ -694,21 +694,22 @@
     </main>
     
     <!-- BOTTOM LOCKUP -->
-    <div class="bottom-lockup">
-      <div class="bottom-left">
-        <!-- home-only line -->
-      <div class="bottom-wordmark bottom-wordmark-home">
-        /* a library of babel project */
+    <footer class="bottom-lockup">
+      <div class="bottom-row">
+        <div class="bottom-wordmark bottom-wordmark-home">
+          /* a library of babel project */
+        </div>
+    
+        <img
+          class="bottom-lockup-horizontal"
+          src="MICRO_tHA_Lockup-2 v2.svg"
+          alt="The Hallucination Archives horizontal lockup"
+        />
       </div>
-      <!-- inner-page horizontal lockup -->
-      <img
-        class="bottom-lockup-horizontal"
-        src="MICRO_tHA_Lockup-2 v2.svg"
-        alt="The Hallucination Archives horizontal lockup"
-      />
-      <!-- bottom-right macro logo -->
+    
       <img class="bottom-logo" src="MACRO-logo1B_Wt.svg" alt="Babel logo" />
-    </div>
+    </footer>
+
 
     <!-- CUSTOM CURSOR -->
     <div class="cursor-vert" id="cursorVert"></div>
@@ -736,20 +737,21 @@
           sec.classList.toggle('active', sec.id === target);
         });
 
-        // update bottom lockup based on section
-        const isHome = target === 'home';
-        const homeWordmark = document.querySelector('.bottom-wordmark-home');
-        const horizLockup = document.querySelector('.bottom-lockup-horizontal');
-        
-        if (homeWordmark && horizLockup) {
-          if (isHome) {
-            homeWordmark.style.display = 'block';
-            horizLockup.style.display = 'none';
-          } else {
-            homeWordmark.style.display = 'none';
-            horizLockup.style.display = 'block';
-          }
-        }
+    // bottom lockup visibility
+    const isHome = target === 'home';
+    const homeWordmark = document.querySelector('.bottom-wordmark-home');
+    const horizLockup = document.querySelector('.bottom-lockup-horizontal');
+    
+    if (homeWordmark && horizLockup) {
+      if (isHome) {
+        homeWordmark.style.display = 'inline-block';
+        horizLockup.style.display = 'none';
+      } else {
+        homeWordmark.style.display = 'none';
+        horizLockup.style.display = 'block';
+      }
+    }
+
                 
       });
     });
