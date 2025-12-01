@@ -877,24 +877,25 @@ document.addEventListener('touchmove', (e) => {
 function positionHallucinationImage() {
   const halluLine = document.querySelector('.home-title-hallu');
   const hallImg = document.querySelector('.hallucination-image');
-  const overlay = document.getElementById('hallOverlay');
+  /* const overlay = document.getElementById('hallOverlay'); qqq */
 
   if (!halluLine || !hallImg || !overlay) return;
 
   // bounding box of the middle line, relative to the viewport
   const rect = halluLine.getBoundingClientRect();
 
-  // since hallOverlay is fixed to the viewport, we can use these coords directly
-  hallImg.style.left = `${rect.left}px`;
+
+  // fudge factors to counteract internal padding in type-hallu_v4.svg
+  const padX = 20; // px trimmed off each side
+  hallImg.style.left = `${rect.left - padX}px`;
   hallImg.style.top = `${rect.top}px`;
-  hallImg.style.width = `${rect.width}px`;
-  hallImg.style.height = `${rect.height}px`;
+  hallImg.style.width = `${rect.width + padX * 2}px`;
+  hallImg.style.height = `${rect.height + padX}px`; /* qqq.me */
 }
 
 // run on load + resize so it stays correct for different sizes
 window.addEventListener('load', positionHallucinationImage);
 window.addEventListener('resize', positionHallucinationImage);
-
 
 // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
 
