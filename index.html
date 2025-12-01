@@ -598,7 +598,7 @@
 
        <!-- blurred hallucination behind -->
       <div class="hallucination-overlay" id="hallOverlay">
-        <img src="type hallu v3.svg" class="hallucination-image"
+        <img src="type-hallu_v4.svg" class="hallucination-image"
              alt="Hallucination blur" />
       </div>
       </section>
@@ -883,9 +883,10 @@ function positionHallucinationImage() {
   // bounding box of the middle line, relative to the viewport
   const rect = halluLine.getBoundingClientRect();
 
-  // since hallOverlay is absolute to the viewport, we can use those coords directly
+  // since hallOverlay is fixed to the viewport, we can use these coords directly
   hallImg.style.left = `${rect.left}px`;
   hallImg.style.top = `${rect.top}px`;
+  hallImg.style.width = `${rect.width}px`;
   hallImg.style.height = `${rect.height}px`;
 }
 
