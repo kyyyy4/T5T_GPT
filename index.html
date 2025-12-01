@@ -424,13 +424,15 @@
     .bottom-wordmark {
       font-family: "AkkuratMono", monospace;
       font-size: 16px;
-      text-transform: uppercase;
       white-space: nowrap;
     }
     
     .bottom-wordmark-home {
       color: rgb(255, 0, 0);
+      display: inline-block;
+      transform: translateY(2px); /* tiny baseline bump to match the B + lockup */
     }
+
     
     .bottom-lockup-horizontal {
       display: none;       /* hidden on home, shown on inner pages via JS */
@@ -695,16 +697,15 @@
     <div class="bottom-lockup">
       <div class="bottom-left">
         <!-- home-only line -->
-        <div class="bottom-wordmark bottom-wordmark-home">
-          / / A LIBRARY OF BABEL PROJECT /
-        </div>
-        <!-- inner-page horizontal lockup -->
-        <img
-          class="bottom-lockup-horizontal"
-          src="MICRO_tHA_Lockup-2.svg"
-          alt="The Hallucination Archives horizontal lockup"
-        />
+      <div class="bottom-wordmark bottom-wordmark-home">
+        /* a library of babel project */
       </div>
+      <!-- inner-page horizontal lockup -->
+      <img
+        class="bottom-lockup-horizontal"
+        src="MICRO_tHA_Lockup-2 v2.svg"
+        alt="The Hallucination Archives horizontal lockup"
+      />
       <!-- bottom-right macro logo -->
       <img class="bottom-logo" src="MACRO-logo1B_Wt.svg" alt="Babel logo" />
     </div>
