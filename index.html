@@ -886,11 +886,11 @@ function positionHallucinationImage() {
 
 
   // fudge factors to counteract internal padding in type-hallu_v4.svg
-  const padX = 20; // px trimmed off each side
+  const padX = 8; // px trimmed off each side
   hallImg.style.left = `${rect.left - padX}px`;
   hallImg.style.top = `${rect.top}px`;
   hallImg.style.width = `${rect.width + padX * 2}px`;
-  hallImg.style.height = `${rect.height + padX}px`; /* qqq.me */
+  hallImg.style.height = `${rect.height}px`; /* qqq.height removed (my doing) */
 }
 
 // run on load + resize so it stays correct for different sizes
