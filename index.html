@@ -326,7 +326,7 @@
       clip-path: inset(50% 50% 50% 50% round 2px);
     }
     
-    .hallucination-image {
+    .hallucination-image {  /* qqq */
       position: absolute;
       height: var(--home-lockup-line-height);
       width: auto;
@@ -599,7 +599,7 @@
 
        <!-- blurred hallucination behind -->
       <div class="hallucination-overlay" id="hallOverlay">
-        <img src="type-hallu_v4.svg" class="hallucination-image"
+        <img src="type-hallu_v5.svg" class="hallucination-image"
              alt="Hallucination blur" />
       </div>
       </section>
@@ -881,21 +881,17 @@ function positionHallucinationImage() {
 
   if (!halluLine || !hallImg || !overlay) return;
 
-  // bounding box of the middle line, relative to the viewport
   const rect = halluLine.getBoundingClientRect();
 
-
-  // fudge factors to counteract internal padding in type-hallu_v4.svg
-  const padX = 128; // px trimmed off each side
-  hallImg.style.left = `${rect.left - padX}px`;
+  hallImg.style.left = `${rect.left}px`;
   hallImg.style.top = `${rect.top}px`;
-  hallImg.style.width = `${rect.width + padX * 2}px`;
-  hallImg.style.height = `${rect.height}px`; /* qqq.height removed (my doing) */
+  hallImg.style.width = `${rect.width}px`;
+  hallImg.style.height = `${rect.height}px`;
 }
 
-// run on load + resize so it stays correct for different sizes
 window.addEventListener('load', positionHallucinationImage);
 window.addEventListener('resize', positionHallucinationImage);
+
 
 // ---------------- BIG TEXT LINES (EDGE-TO-EDGE + HOVER FLICKER) ----------------
 
