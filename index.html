@@ -439,14 +439,21 @@
   }
 
   .footer-title-lockup {
-    display: flex;
+    display: none;              /* hidden on home by default */
+    display: flex;              /* will be re-enabled via inline style */
     align-items: flex-start;
   }
-  
+    
   .footer-title-hallu {
     height: 28px;     /* nice compact footer size */
     width: auto;
     filter: brightness(0) invert(1); /* pure white */
+  }
+
+  .bottom-wordmark-home {
+    color: rgb(255, 0, 0);
+    display: inline-block;      /* visible on home by default */
+    transform: translateY(1px);
   }
 
 
@@ -756,19 +763,16 @@
     // bottom lockup visibility
     const isHome = target === 'home';
     const homeWordmark = document.querySelector('.bottom-wordmark-home');
-    const horizLockup = document.querySelector('.bottom-lockup-horizontal');
+    const footerLockup = document.querySelector('.footer-title-lockup');
     
-    if (homeWordmark && horizLockup) {
-      if (isHome) {
-        homeWordmark.style.display = 'inline-block';
-        horizLockup.style.display = 'none';
-      } else {
-        homeWordmark.style.display = 'none';
-        horizLockup.style.display = 'block';
-      }
+    
+    const homeWordmark = document.querySelector('.bottom-wordmark-home');
+    const footerLockup = document.querySelector('.footer-title-lockup');
+    if (homeWordmark && footerLockup) {
+      homeWordmark.style.display = 'inline-block';
+      footerLockup.style.display = 'none';
     }
-
-                
+        
       });
     });
 
