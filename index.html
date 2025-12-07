@@ -437,19 +437,17 @@
     display: inline-block;
     transform: translateY(1px); /* tiny optical baseline tweak */
   }
-  
-  .bottom-lockup-horizontal {
-    display: none;    /* toggled on inner pages by JS */
-    height: 28px;
-    width: auto;
-  }
-  
-  .bottom-logo {
-    display: block;
-    height: 28px;
-    width: auto;
-  }
 
+  .footer-title-lockup {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .footer-title-hallu {
+    height: 28px;     /* nice compact footer size */
+    width: auto;
+    filter: brightness(0) invert(1); /* pure white */
+  }
 
 
     /* === CUSTOM CURSOR CROSSHAIR === */
@@ -541,6 +539,11 @@
       }
       .center-scroll-container {
         max-width: calc(100vw - 48px);
+      }
+      
+      .footer-title-hallu {
+        height: 20px;
+        width: auto;
       }
       
       .bottom-wordmark-home {
@@ -709,16 +712,16 @@
     <!-- BOTTOM LOCKUP -->
     <footer class="bottom-lockup">
       <div class="bottom-row">
-        <div class="bottom-wordmark bottom-wordmark-home">
-          /* a library of babel project */
+        
+        <!-- NEW: main hallucinations lockup (same as home) -->
+        <div class="footer-title-lockup">
+          <img class="footer-title-hallu" src="hallu v1172-mark.svg" alt="HALLUCINATIONS" />
         </div>
-    
-        <img
-          class="bottom-lockup-horizontal"
-          src="MICRO_tHA_Lockup-2 v2.svg"
-          alt="The Hallucination Archives horizontal lockup"
-        />
-      </div>
+
+          <div class="bottom-wordmark bottom-wordmark-home">
+            /* a library of babel project */
+          </div>
+        </div>
     
       <img class="bottom-logo" src="MACRO-logo1B_Wt.svg" alt="Babel logo" />
     </footer>
