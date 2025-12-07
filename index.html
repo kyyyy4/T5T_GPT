@@ -439,8 +439,7 @@
   }
 
   .footer-title-lockup {
-    display: none;              /* hidden on home by default */
-    display: flex;              /* will be re-enabled via inline style */
+    display: flex;
     align-items: flex-start;
   }
     
@@ -744,91 +743,38 @@
   <script>
     
   // ---------------- SECTION SWITCHING ----------------
-  const navLinks = document.querySelectorAll('a[data-section]');
-  const sections = document.querySelectorAll('main section');
+const navLinks = document.querySelectorAll('a[data-section]');
+const sections = document.querySelectorAll('main section');
 
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = link.dataset.section;
 
-    navLinks.forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const target = link.dataset.section;
+    // update active state on BOTH desktop + mobile nav
+    document.querySelectorAll('a[data-section]').forEach(l => {
+      l.classList.toggle('active', l.dataset.section === target);
+    });
 
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-
-        sections.forEach(sec => {
-          sec.classList.toggle('active', sec.id === target);
-        });
+    // show the right section
+    sections.forEach(sec => {
+      sec.classList.toggle('active', sec.id === target);
+    });
 
     // bottom lockup visibility
     const isHome = target === 'home';
     const homeWordmark = document.querySelector('.bottom-wordmark-home');
     const footerLockup = document.querySelector('.footer-title-lockup');
-    
-    
-    const homeWordmark = document.querySelector('.bottom-wordmark-home');
-    const footerLockup = document.querySelector('.footer-title-lockup');
+
     if (homeWordmark && footerLockup) {
-      homeWordmark.style.display = 'inline-block';
-      footerLockup.style.display = 'none';
-    }
-        
-      });
-    });
-
-        // Mobile nav toggle
-    const navToggle = document.getElementById('navToggle');
-    const navToggleBox = document.getElementById('navToggleBox');
-    const mobileMenu = document.getElementById('mobileMenu');
-    let navRotation = 0;
-    
-    function closeMobileMenu() {
-      if (!mobileMenu) return;
-      if (mobileMenu.classList.contains('open')) {
-        // also rotate 90° CCW when closing via link
-        navRotation -= 90;
-        if (navToggleBox) {
-          navToggleBox.style.transform = `rotate(${navRotation}deg)`;
-        }
-    
-        mobileMenu.classList.remove('open');
-    
-        // normalize rotation after the closing animation finishes
-        setTimeout(() => {
-          navRotation = navRotation % 360;
-          if (navToggleBox) {
-            navToggleBox.style.transform = `rotate(${navRotation}deg)`;
-          }
-        }, 250);
-      }
+      homeWordmark.style.display = isHome ? 'inline-block' : 'none';
+      footerLockup.style.display = isHome ? 'none' : 'flex';
     }
 
-    if (navToggle && navToggleBox && mobileMenu) {
-      navToggle.addEventListener('click', () => {
-        navRotation -= 90; // always rotate 90° CCW
-        navToggleBox.style.transform = `rotate(${navRotation}deg)`;
-        mobileMenu.classList.toggle('open');
-      });
-    }
-
-    // Close mobile menu when any nav link is clicked
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        closeMobileMenu();
-      });
-    });
-
-
-    // default: home visible
-    sections.forEach(sec => sec.classList.toggle('active', sec.id === 'home'));
-
-    // bottom lockup initial state
-    const homeWordmark = document.querySelector('.bottom-wordmark-home');
-    const horizLockup = document.querySelector('.bottom-lockup-horizontal');
-    if (homeWordmark && horizLockup) {
-      homeWordmark.style.display = 'block';
-      horizLockup.style.display = 'none';
-    }
+    // also close the mobile menu via the existing helper
+    closeMobileMenu();
+  });
+});
 
     
 // ---------------- CUSTOM CURSOR + HALLUCINATION MASK ----------------
