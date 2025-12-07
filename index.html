@@ -283,6 +283,11 @@
       flex: 1 1 auto;
     }
 
+    .home-title-hallu {
+      filter: brightness(0) invert(1); /* force mark to pure white */
+    }
+
+
     /* at ≥1440px, push it up so gaps close on widescreens */
     @media (min-width: 1440px) {
       .home-line {
@@ -329,7 +334,7 @@
       position: absolute;
       height: var(--home-lockup-line-height);
       width: auto;
-      filter: none;
+      filter: blur(5px);
       opacity: 0.6;          /* so you can still see both layers */
       transform-origin: top left;
     }
@@ -522,12 +527,15 @@
       }
       .home-title-lockup {
         left: 24px;
-        bottom: 110px;
+        bottom: 120px;          /* tweak if you need more breathing room */
       }
-      .home-title-lockup img,
-      .hallucination-image {
-        height: 64px;
+      
+      .home-title-lockup img { /*removed a .hal-something. lets see if it was load bearing*/
+        width: 90vw;            /* responsive width */
+        max-width: 90vw;
+        height: auto;           /* let height follow width */
       }
+    
       .nav-secondary {
         display: none;
       }
