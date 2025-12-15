@@ -422,6 +422,27 @@
       filter: brightness(0.98);
     }
     
+    /* --- SPATIAL MEDIA CONSTRAINT --- */
+    
+    .media-block .media-thumb {
+      width: 100%;
+      max-width: 720px;     /* matches posters block width */
+      max-height: 260px;    /* critical: kills the takeover */
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* spatial image behavior */
+    .media-block .media-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;    /* documentary crop, not poster-fit */
+      object-position: center;
+      display: block;
+      filter: brightness(0.95);
+    }
+    
+        
     /* keep from exploding on small screens */
     @media (max-width: 900px) {
       .poster-row {
@@ -432,6 +453,13 @@
         max-width: 30vw;
       }
     }
+
+        @media (max-width: 900px) {
+      .media-block .media-thumb {
+        max-height: 200px;
+      }
+    }
+
 
     /* --- MORE ELLIPSIS --- */
     
