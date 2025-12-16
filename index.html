@@ -423,54 +423,67 @@
     }
 
     /* MEDIA page: posters only */
-.posters-only{
+/* --- POSTERS GALLERY (MEDIA PAGE) --- */
+
+.posters-only {
   width: 100%;
-  max-width: 980px;
+  max-width: 1300px;          /* wider on desktop */
+  margin: 0 auto;
+  padding-top: 60px;
 }
 
-.posters-row{
+.posters-row {
   display: flex;
-  gap: 18px;
+  justify-content: center;
+  gap: 40px;                  /* more breathing room between posters */
   align-items: flex-start;
 }
 
-.posters-row img{
+.posters-row img {
   width: 100%;
-  max-width: 300px;
+  max-width: 360px;           /* larger posters */
   height: auto;
-  display: block;
   object-fit: contain;
+  display: block;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03); /* tiny archival outline */
 }
 
-    /* big ellipsis */
-    .posters-more{
-      margin-top: 16px;
-      font-family: "AkkuratMono", monospace;
-      font-size: 36px;
-      line-height: 1;
-      letter-spacing: 0.08em;
-      color: #ffffff;
-      opacity: 0.85;
-      transition: color 0.2s ease, opacity 0.2s ease;
-    }
-    
-    .posters-more:hover{
-      color: rgb(255, 0, 0);
-      opacity: 1;
-    }
-    
-    /* mobile: keep it on-screen */
-    @media (max-width: 900px){
-      .posters-row{
-        gap: 12px;
-      }
-      .posters-row img{
-        max-width: 30vw;   /* stays 3-up */
-      }
-      .posters-more{
-        font-size: 28px;
-      }
-    }
+/* BIG CENTERED ELLIPSIS */
+.posters-more {
+  margin-top: 32px;
+  width: 100%;
+  text-align: center;
+
+  font-family: "AvenirLTStd-Heavy", "Avenir", sans-serif;
+  font-size: 48px;            /* nice and large */
+  letter-spacing: 0.06em;
+  color: #fff;
+  opacity: 0.7;
+
+  transition: color 0.2s ease, opacity 0.2s ease;
+  cursor: default;
+}
+
+.posters-more:hover {
+  color: rgb(255,0,0);
+  opacity: 1;
+}
+
+/* --- MOBILE BEHAVIOR --- */
+@media (max-width: 900px) {
+
+  .posters-row {
+    gap: 16px;
+  }
+
+  .posters-row img {
+    max-width: 28vw;          /* still 3-up */
+  }
+
+  .posters-more {
+    font-size: 34px;
+  }
+}
 
     /* --- SPATIAL MEDIA CONSTRAINT --- */
     
