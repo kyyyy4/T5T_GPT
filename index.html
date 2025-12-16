@@ -421,7 +421,57 @@
       object-fit: contain;
       filter: brightness(0.98);
     }
+
+    /* MEDIA page: posters only */
+.posters-only{
+  width: 100%;
+  max-width: 980px;
+}
+
+.posters-row{
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.posters-row img{
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+    /* big ellipsis */
+    .posters-more{
+      margin-top: 16px;
+      font-family: "AkkuratMono", monospace;
+      font-size: 36px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      opacity: 0.85;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
     
+    .posters-more:hover{
+      color: rgb(255, 0, 0);
+      opacity: 1;
+    }
+    
+    /* mobile: keep it on-screen */
+    @media (max-width: 900px){
+      .posters-row{
+        gap: 12px;
+      }
+      .posters-row img{
+        max-width: 30vw;   /* stays 3-up */
+      }
+      .posters-more{
+        font-size: 28px;
+      }
+    }
+
     /* --- SPATIAL MEDIA CONSTRAINT --- */
     
     .media-block .media-thumb {
@@ -745,54 +795,21 @@
 
       <!-- MEDIA -->
       <section id="media">
-        <div class="bg-grid"></div>
-
-        <nav class="nav-secondary">
-          <a href="#project">project</a>
-          <a href="#chatlogs">chat logs</a>
-          <a href="#images">images</a>
-          <a href="#education">education</a>
-        </nav>
-
-        <div class="media-block">
-          <h3>posters</h3>
-        
-          <div class="poster-row">
-            <img src="MJ-Poster-1.png" alt="Poster 1">
-            <img src="MJ-Poster-2.png" alt="Poster 2">
-            <img src="MJ-Poster-3.png" alt="Poster 3">
-          </div>
-        
-          <div class="media-more">… more</div>
-        </div>
-
-            <div class="media-block">
-              <h3>spatial</h3>
-              <div class="media-thumb">
-                <img src="spatial-installation_quick-pic.jpg" alt="Big Book of Babel">
-              </div>
+        <div class="center-scroll-container">
+          <div class="posters-only">
+      
+            <div class="posters-row">
+              <img src="MJ-Poster-1.png" alt="Poster 1">
+              <img src="MJ-Poster-2.png" alt="Poster 2">
+              <img src="MJ-Poster-3.png" alt="Poster 3">
             </div>
-            <div class="media-block">
-              <h3>social</h3>
-              <div class="media-thumb">
-                social stack
-              </div>
-            </div>
-            <div class="media-block">
-              <h3>ephemera</h3>
-              <div class="media-thumb">
-                ephemera
-              </div>
-            </div>
-            <div class="media-block">
-              <h3>else</h3>
-              <div class="media-thumb">
-                misc
-              </div>
-            </div>
+      
+            <div class="posters-more">…</div>
+      
           </div>
         </div>
       </section>
+
 
       <!-- CONTACT (placeholder center container) -->
       <section id="contact">
